@@ -326,6 +326,13 @@ def _invert_complex(f, g_ys, symbol):
                 return (h, S.EmptySet)
             return _invert_complex(h, imageset(Lambda(n, n/g), g_ys), symbol)
 
+    if f.is_Pow:
+        # only the case symbol**(expo) with negative exponent equal to 0
+        if g_ys == FiniteSet(0):
+            base, expo = f.args
+            if isinstance(base, Dummy) and expo.is_negative:
+                return (base, S.EmptySet)
+
     if hasattr(f, 'inverse') and \
        not isinstance(f, TrigonometricFunction) and \
        not isinstance(f, HyperbolicFunction) and \
